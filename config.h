@@ -1,3 +1,6 @@
+#ifndef CONFIG_H_
+#define CONFIG_H_
+
 /*************************************************************************************************/
 /****           CONFIGURABLE PARAMETERS                                                       ****/
 /*************************************************************************************************/
@@ -17,8 +20,7 @@
  */
 
 /* Notes:
- * 1. parameters marked with (*) in the comment are stored in eeprom and cannot currently be changed via the GUI but
- *    can be changed via serial monitor or LCD.
+ * 1. parameters marked with (*) in the comment are stored in eeprom and can be changed via serial monitor or LCD.
  * 2. parameters marked with (**) in the comment are stored in eeprom and can be changed via the GUI
  */
 
@@ -69,7 +71,7 @@
        in some cases, this value must be lowered down to 900 for some specific ESCs, otherwise they failed to initiate */
     #define MINCOMMAND  1000
 
-  /**********************************    I2C speed   ************************************/
+  /**********************************  I2C speed for old WMP config (useless config for other sensors)  *************/
     #define I2C_SPEED 100000L     //100kHz normal mode, this value must be used for a genuine WMP
     //#define I2C_SPEED 400000L   //400kHz fast mode, it works only with some WMP clones
 
@@ -105,8 +107,9 @@
       //#define SIRIUS          // Sirius Navigator IMU                                             <- confirmed by Alex
       //#define SIRIUSGPS       // Sirius Navigator IMU  using external MAG on GPS board            <- confirmed by Alex
       //#define SIRIUS600       // Sirius Navigator IMU  using the WMP for the gyro
-      //#define SIRIUS_AIR      // Sirius Navigator IMU 6050 32U4 from MultiWiiCopter.com
+      //#define SIRIUS_AIR      // Sirius Navigator IMU 6050 32U4 from MultiWiiCopter.com           <- confirmed by Alex
       //#define SIRIUS_AIR_GPS  // Sirius Navigator IMU 6050 32U4 from MultiWiiCopter.com with GPS/MAG remote located
+      //#define SIRIUS_MEGAv5_OSD //  Paris_Sirius™ ITG3050,BMA280,MS5611,HMC5883,uBlox  http://www.Multiwiicopter.com <- confirmed by Alex
       //#define MINIWII         // Jussi's MiniWii Flight Controller                                <- confirmed by Alex
       //#define MICROWII        // MicroWii 10DOF with ATmega32u4, MPU6050, HMC5883L, MS561101BA from http://flyduino.net/
       //#define CITRUSv2_1      // CITRUS from qcrc.ca
@@ -119,12 +122,14 @@
       //#define MONGOOSE1_0     // mongoose 1.0    http://store.ckdevices.com/
       //#define CRIUS_LITE      // Crius MultiWii Lite
       //#define CRIUS_SE        // Crius MultiWii SE
+      //#define CRIUS_SE_v2_0   // Crius MultiWii SE 2.0 with MPU6050, HMC5883 and BMP085
       //#define OPENLRSv2MULTI  // OpenLRS v2 Multi Rc Receiver board including ITG3205 and ADXL345
       //#define BOARD_PROTO_1   // with MPU6050 + HMC5883L + MS baro
       //#define BOARD_PROTO_2   // with MPU6050 + slave  MAG3110 + MS baro
       //#define GY_80           // Chinese 10 DOF with  L3G4200D ADXL345 HMC5883L BMP085, LLC
       //#define GY_85           // Chinese 9 DOF with  ITG3205 ADXL345 HMC5883L LLC
       //#define GY_86           // Chinese 10 DOF with  MPU6050 HMC5883L MS5611, LLC
+      //#define GY_88 // Chinese 10 DOF with MPU6050 HMC5883L BMP085, LLC
       //#define GY_521          // Chinese 6  DOF with  MPU6050, LLC
       //#define INNOVWORKS_10DOF // with ITG3200, BMA180, HMC5883, BMP085 available here http://www.diymulticopter.com
       //#define INNOVWORKS_6DOF // with ITG3200, BMA180 available here http://www.diymulticopter.com
@@ -134,7 +139,7 @@
       //#define Bobs_6DOF_V1     // BobsQuads 6DOF V1 with ITG3200 & BMA180
       //#define Bobs_9DOF_V1     // BobsQuads 9DOF V1 with ITG3200, BMA180 & HMC5883L
       //#define Bobs_10DOF_BMP_V1 // BobsQuads 10DOF V1 with ITG3200, BMA180, HMC5883L & BMP180 - BMP180 is software compatible with BMP085
-      //#define FLYDUINO_MPU
+      //#define FLYDUINO_MPU       // MPU6050 Break Out onboard 3.3V reg
       //#define CRIUS_AIO_PRO_V1
       //#define DESQUARED6DOFV2GO  // DEsquared V2 with ITG3200 only
       //#define DESQUARED6DOFV4    // DEsquared V4 with MPU6050
@@ -148,23 +153,35 @@
       //#define FLYDU_ULTRA        // MEGA+10DOF+MT3339 FC
       //#define DIYFLYING_MAGE_V1  // diyflying 10DOF mega board with MPU6050 + HMC5883L + BMP085 http://www.indoor-flying.hk
       //#define MultiWii_32U4_SE         // Hextronik MultiWii_32U4_SE
+<<<<<<< HEAD
       //#define MultiWii_32U4_SE_no_baro // Hextronik MultiWii_32U4_SE without the MS561101BA for more free flash-memory
 
+=======
+      //#define MultiWii_32U4_SE_no_baro // Hextronik MultiWii_32U4_SE without the MS561101BA to free flash-memory for other functions
+      //#define Flyduino9DOF       // Flyduino 9DOF IMU MPU6050+HMC5883l
+      //#define Nano_Plane         // Multiwii Plane version with tail-front LSM330 sensor http://www.radiosait.ru/en/page_5324.html
+      
+>>>>>>> upstream/upstream_shared
     /***************************    independent sensors    ********************************/
       /* leave it commented if you already checked a specific board above */
       /* I2C gyroscope */
       #define WMP
       //#define ITG3200
+      //#define MPU3050
       //#define L3G4200D
       //#define MPU6050       //combo + ACC
-
+      //#define LSM330        //combo + ACC
+      
       /* I2C accelerometer */
+<<<<<<< HEAD
       #define NUNCHUCK  // if you want to use the nunckuk connected to a WMP
+=======
+>>>>>>> upstream/upstream_shared
       //#define MMA7455
       //#define ADXL345
       //#define BMA020
       //#define BMA180
-      //#define NUNCHACK  // if you want to use the nunckuk as a standalone I2C ACC without WMP
+      //#define BMA280
       //#define LIS3LV02
       //#define LSM303DLx_ACC
       //#define MMA8451Q
@@ -206,11 +223,10 @@
 /****************  SECTION  2 - COPTER TYPE SPECIFIC OPTIONS                               *******/
 /*****************                                                                 ***************/
 /*************************************************************************************************/
-
   /********************************  PID Controller *********************************/
     /* choose one of the alternate PID control algorithms
      * 1 = evolved oldschool algorithm (similar to v2.2)
-     * 2 = new experimental algorithm from Alex Khoroshko http://www.multiwii.com/forum/viewtopic.php?f=8&t=3671&start=10#p37387
+     * 2 = new experimental algorithm from Alex Khoroshko - unsupported - http://www.multiwii.com/forum/viewtopic.php?f=8&t=3671&start=10#p37387
      * */
     #define PID_CONTROLLER 1
 
@@ -218,16 +234,18 @@
     #define YAW_DIRECTION 1
     //#define YAW_DIRECTION -1 // if you want to reverse the yaw correction direction
 
-  /********************************    ARM/DISARM    *********************************/
+    #define ONLYARMWHENFLAT //prevent the copter from arming when the copter is tilted
+
+   /********************************    ARM/DISARM    *********************************/
    /* optionally disable stick combinations to arm/disarm the motors.
      * In most cases one of the two options to arm/disarm via TX stick is sufficient */
     #define ALLOW_ARM_DISARM_VIA_TX_YAW
     //#define ALLOW_ARM_DISARM_VIA_TX_ROLL
 
-  /********************************    SERVOS      *********************************/
-    /* temporary info on which servos connect where is here
-     * http://www.multiwii.com/forum/viewtopic.php?f=8&t=3498 <== NEEDS FIXING - MOVE TO WIKI
-     * http://www.multiwii.com/forum/viewtopic.php?f=8&t=3498&start=30#p36023  <== NEEDS FIXING - MOVE TO WIKI  */
+    /********************************    SERVOS      *********************************/
+    /* info on which servos connect where and how to setup can be found here
+     * http://www.multiwii.com/wiki/index.php?title=Config.h#Servos_configuration
+     */
 
 
     /* if you want to preset min/middle/max values for servos right after flashing, because of limited physical
@@ -291,11 +309,24 @@
     //#define HELI_USE_SERVO_FOR_THROTTLE
 
   /***********************      your individual mixing     ***********************/
+<<<<<<< HEAD
     /* if you want to override an existing entry in the mixing table, you may want to avoid esditing the
      * mixTable() function for every version again and again.
+=======
+    /* if you want to override an existing entry in the mixing table, you may want to avoid editing the
+     * mixTable() function for every version again and again. 
+>>>>>>> upstream/upstream_shared
      * howto: http://www.multiwii.com/wiki/index.php?title=Config.h#Individual_Mixing
      */
     //#define MY_PRIVATE_MIXING "filename.h"
+
+  /***********************      your individual defaults     ***********************/
+    /* if you want to replace the hardcoded default values with your own (e.g. from a previous save to an .mwi file),
+     * you may want to avoid editing the LoadDefaults() function for every version again and again.
+     * http://www.multiwii.com/wiki/index.php?title=Config.h#Individual_defaults
+     */
+    //#define MY_PRIVATE_DEFAULTS "filename.h"
+
 
 /*************************************************************************************************/
 /*****************                                                                 ***************/
@@ -327,7 +358,7 @@
          For PROMINI, attach sat grey to RX0.  Attach sat black to ground. */
       //#define SPEKTRUM 1024
       //#define SPEKTRUM 2048
-      //#define SPEK_SERIAL_PORT 1    // Forced to 0 on Pro Mini and single serial boards; Set to your choice of 0, 1, or 2 on any Mega based board (defaults to 1 on Mega).
+      //#define RX_SERIAL_PORT 1    // Forced to 0 on Pro Mini and single serial boards; Set to your choice of 0, 1, or 2 on any Mega based board (defaults to 1 on Mega).
       //**************************
       // Defines that allow a "Bind" of a Spektrum or Compatible Remote Receiver (aka Satellite) via Configuration GUI.
       //   Bind mode will be same as declared above, if your TX is capable.
@@ -342,10 +373,12 @@
       //#define SPEK_BIND_DATA   6
 
     /*******************************    SBUS RECIVER    ************************************/
-      /* The following line apply only for Futaba S-Bus Receiver on MEGA boards at RX1 only (Serial 1).
+      /* The following line apply only for Futaba S-Bus Receiver on MEGA boards or PROMICRO boards.
          You have to invert the S-Bus-Serial Signal e.g. with a Hex-Inverter like IC SN74 LS 04 */
-      //#define SBUS
-      //#define SBUS_SERIAL_PORT 1
+      //#define SBUS     PITCH,YAW,THROTTLE,ROLL,AUX1,AUX2,AUX3,AUX4,8,9,10,11,12,13,14,15,16,17  // dsm2 orangerx
+      //#define SBUS     ROLL,PITCH,THROTTLE,YAW,AUX1,AUX2,AUX3,AUX4,8,9,10,11,12,13,14,15,16,17  // T14SG
+      //#define RX_SERIAL_PORT 1
+      #define SBUS_MID_OFFSET 988 //SBUS Mid-Point at 1500
 
 /*************************************************************************************************/
 /*****************                                                                 ***************/
@@ -515,7 +548,14 @@
      Original idea by Kraut Rob, first implementation HAdrian							*/
 
   //#define THROTTLE_ANGLE_CORRECTION 40
+<<<<<<< HEAD
 
+=======
+  
+  /*** HEADFREE : the copter can be controled by an absolute stick orientation, whatever the yaw orientation ***/
+  //#define HEADFREE
+  
+>>>>>>> upstream/upstream_shared
  /*************************        Advanced Headfree Mode             ********************/
  /* In Advanced Headfree mode when the copter is farther than ADV_HEADFREE_RANGE meters then
     the  bearing between home and copter position will become the control direction
@@ -544,8 +584,13 @@
 
 
   /********                          Failsafe settings                 ********************/
+<<<<<<< HEAD
     /* Failsafe check pulses on four main control channels CH1-CH4. If the pulse is missing or bellow 985us (on any of these four channels)
        the failsafe procedure is initiated. After FAILSAFE_DELAY time from failsafe detection, the level mode is on (if ACC or nunchuk is avaliable),
+=======
+    /* Failsafe check pulses on four main control channels CH1-CH4. If the pulse is missing or bellow 985us (on any of these four channels) 
+       the failsafe procedure is initiated. After FAILSAFE_DELAY time from failsafe detection, the level mode is on (if ACC is avaliable),
+>>>>>>> upstream/upstream_shared
        PITCH, ROLL and YAW is centered and THROTTLE is set to FAILSAFE_THROTTLE value. You must set this value to descending about 1m/s or so
        for best results. This value is depended from your configuration, AUW and some other params.  Next, after FAILSAFE_OFF_DELAY the copter is disarmed,
        and motors is stopped. If RC pulse coming back before reached FAILSAFE_OFF_DELAY time, after the small quard time the RC control is returned to normal. */
@@ -553,6 +598,8 @@
     #define FAILSAFE_DELAY     10                     // Guard time for failsafe activation after signal lost. 1 step = 0.1sec - 1sec in example
     #define FAILSAFE_OFF_DELAY 200                    // Time for Landing before motors stop in 0.1sec. 1 step = 0.1sec - 20sec in example
     #define FAILSAFE_THROTTLE  (MINTHROTTLE + 200)    // (*) Throttle level used for landing - may be relative to MINTHROTTLE - as in this case
+    
+    #define FAILSAFE_DETECT_TRESHOLD  985
 
 
   /*****************                DFRobot LED RING    *********************************/
@@ -603,11 +650,14 @@
        Must be greater than zero, comment if you dont want a deadband on roll, pitch and yaw */
     //#define DEADBAND 6
 
+<<<<<<< HEAD
     /* defines the neutral zone of throttle stick during altitude hold, default setting is
        +/-40 uncommend and change the value below if you want to change it. */
     //#define ALT_HOLD_THROTTLE_NEUTRAL_ZONE 40
 
 
+=======
+>>>>>>> upstream/upstream_shared
   /**************************************************************************************/
   /***********************                  GPS                **************************/
   /**************************************************************************************/
@@ -646,13 +696,6 @@
     // If your I2C GPS board has Sonar support enabled
     //#define I2C_GPS_SONAR
 
-    /* I2C GPS device made with an indeedent ATTiny[24]313 + GPS device and
-       optional sonar device.    https://github.com/wertarbyte/tiny-gps/ */
-    /* get GPS data from Tiny-GPS */
-    //#define TINY_GPS
-    /* get sonar data from Tiny-GPS */
-    //#define TINY_GPS_SONAR
-
     /* GPS data readed from Misio-OSD - GPS module connected to OSD, and MultiWii read GPS data from OSD - tested and working OK ! */
     //#define GPS_FROM_OSD
 
@@ -685,6 +728,7 @@
     #define GPS_WP_RADIUS              200       // if we are within this distance to a waypoint then we consider it reached (distance is in cm)
     #define NAV_SLEW_RATE              30        // Adds a rate control to nav output, will smoothen out nav angle spikes
 
+    //#define ONLY_ALLOW_ARM_WITH_GPS_3DFIX      // Only allow FC arming if GPS has a 3D fix.
 
   /**************************************************************************************/
   /***********************        LCD/OLED - display settings       *********************/
@@ -824,26 +868,35 @@
     #define PINT2mA 132     /* (*) hard: one integer step on arduino analog translates to mA (example 4.9 / 37 * 1000) ;
                                    soft: use fictional value, start with 100.
                                    for hard and soft: larger PINT2mA will get you larger value for power (mAh equivalent) */
+    //#define WATTS // compute and display the actual watts (=Volt*Ampere) consumed - requires both POWERMETER_HARD and VBAT
 
   /********************************************************************/
   /****           altitude hold                                    ****/
   /********************************************************************/
+
+    /* defines the neutral zone of throttle stick during altitude hold, default setting is
+       +/-50 uncommend and change the value below if you want to change it. */
+    #define ALT_HOLD_THROTTLE_NEUTRAL_ZONE    50
+    //#define ALT_HOLD_THROTTLE_MIDPOINT        1500  // in us    - if uncommented, this value is used in ALT_HOLD for throttle stick middle point instead of initialThrottleHold parameter.
+
 
     /* uncomment to disable the altitude hold feature.
      * This is useful if all of the following apply
      * + you have a baro
      * + want altitude readout and/or variometer
      * + do not use altitude hold feature
-     * + want to save memory space
-     */
+     * + want to save memory space */
     //#define SUPPRESS_BARO_ALTHOLD
 
+<<<<<<< HEAD
   /* Natural alt change for rapid pilots. It's temporary switch OFF the althold when throttle stick is out of deadband defined with ALT_HOLD_THROTTLE_NEUTRAL_ZONE
    * but if it's commented: Smooth alt change routine is activated, for slow auto and aerophoto modes (in general solution from alexmos). It's slowly increase/decrease
    * altitude proportional to stick movement (+/-100 throttle gives about +/-50 cm in 1 second with cycle time about 3-4ms)
    */
   #define ALTHOLD_FAST_THROTTLE_CHANGE
 
+=======
+>>>>>>> upstream/upstream_shared
   /********************************************************************/
   /****           altitude variometer                              ****/
   /********************************************************************/
@@ -861,7 +914,7 @@
     //#define VARIOMETER_SINGLE_TONE   // use only one tone (BEL); neccessary for non-patched vt100 terminals
 
   /********************************************************************/
-  /****           baord naming                                     ****/
+  /****           board naming                                     ****/
   /********************************************************************/
 
     /*
@@ -881,7 +934,7 @@
     //#define MULTIPLE_CONFIGURATION_PROFILES
 
   /*************      do no reset constants when change of flashed program is detected ***********/
-    //#define NO_FLASH_CHECK
+    #define NO_FLASH_CHECK
 
 /*************************************************************************************************/
 /*****************                                                                 ***************/
@@ -893,6 +946,20 @@
   /********   special ESC with extended range [0-2000] microseconds  ********************/
   /**************************************************************************************/
     //#define EXT_MOTOR_RANGE // using this with wii-esc requires to change MINCOMMAND to 1008 for promini and mega
+
+  /**************************************************************************************/
+  /********  brushed ESC ****************************************************************/
+  /**************************************************************************************/
+    // for 328p proc
+    //#define EXT_MOTOR_32KHZ
+    //#define EXT_MOTOR_4KHZ
+    //#define EXT_MOTOR_1KHZ
+  
+    // for 32u4 proc
+    //#define EXT_MOTOR_64KHZ
+    //#define EXT_MOTOR_32KHZ
+    //#define EXT_MOTOR_16KHZ
+    //#define EXT_MOTOR_8KHZ
 
   /**************************************************************************************/
   /***********************     motor, servo and other presets     ***********************/
@@ -1033,7 +1100,7 @@
        example: with cycle time of approx 3ms, do action every 6*3ms=18ms
        value must be [1; 65535] */
     #define LCD_TELEMETRY_FREQ 23       // to send telemetry data over serial 23 <=> 60ms <=> 16Hz (only sending interlaced, so 8Hz update rate)
-    #define LCD_TELEMETRY_AUTO_FREQ 1967// to step to next telemetry page 967 <=> 3s
+    #define LCD_TELEMETRY_AUTO_FREQ  967// to step to next telemetry page 967 <=> 3s
     #define PSENSOR_SMOOTH 16           // len of averaging vector for smoothing the PSENSOR readings; should be power of 2; set to 1 to disable
     #define VBAT_SMOOTH 16              // len of averaging vector for smoothing the VBAT readings; should be power of 2; set to 1 to disable
     #define RSSI_SMOOTH 16              // len of averaging vector for smoothing the RSSI readings; should be power of 2; set to 1 to disable
@@ -1076,7 +1143,9 @@
   /* disable use of the POWER PIN (allready done if the option RCAUXPIN12 is selected) */
   #define DISABLE_POWER_PIN
 
-
 /*************************************************************************************************/
 /****           END OF CONFIGURABLE PARAMETERS                                                ****/
 /*************************************************************************************************/
+
+#endif /* CONFIG_H_ */
+

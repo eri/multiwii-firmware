@@ -1,5 +1,14 @@
 #include <avr/eeprom.h>
+#include "Arduino.h"
+#include "config.h"
+#include "def.h"
+#include "types.h"
+#include "EEPROM.h"
+#include "MultiWii.h"
+#include "Alarms.h"
+#include "GPS.h"
 
+void LoadDefaults(void);
 
 uint8_t calculate_sum(uint8_t *cb , uint8_t siz) {
   uint8_t sum=0x55;  // checksum init
@@ -117,13 +126,21 @@ void update_constants() {
     conf.governorP = GOVERNOR_P;
     conf.governorD = GOVERNOR_D;
   #endif
+  #if defined(MY_PRIVATE_DEFAULTS)
+    #include MY_PRIVATE_DEFAULTS
+  #endif
   writeParams(0); // this will also (p)reset checkNewConf with the current version number again.
 }
 
 void LoadDefaults() {
   uint8_t i;
-  #ifndef SUPPRESS_DEFAULTS_FROM_GUI
-    #if PID_CONTROLLER == 1
+  #ifdef SUPPRESS_DEFAULTS_FROM_GUI
+    // do nothing
+  #elif defined(MY_PRIVATE_DEFAULTS)
+    // #include MY_PRIVATE_DEFAULTS
+    // do that at the last possible moment, so we can override virtually all defaults and constants
+  #else
+	  #if PID_CONTROLLER == 1
       conf.pid[ROLL].P8     = 33;  conf.pid[ROLL].I8    = 30; conf.pid[ROLL].D8     = 23;
       conf.pid[PITCH].P8    = 33; conf.pid[PITCH].I8    = 30; conf.pid[PITCH].D8    = 23;
       conf.pid[PIDLEVEL].P8 = 90; conf.pid[PIDLEVEL].I8 = 10; conf.pid[PIDLEVEL].D8 = 100;
@@ -151,7 +168,7 @@ void LoadDefaults() {
     for(i=0;i<CHECKBOXITEMS;i++) {conf.activate[i] = 0;}
     conf.angleTrim[0] = 0; conf.angleTrim[1] = 0;
     conf.powerTrigger1 = 0;
-  #endif
+  #endif // SUPPRESS_DEFAULTS_FROM_GUI
   #if defined(SERVO)
     static int8_t sr[8] = SERVO_RATES;
     #ifdef SERVO_MIN
@@ -176,11 +193,11 @@ void LoadDefaults() {
     conf.dynThrPID = 50;
     conf.rcExpo8   =  0;
   #endif
-  update_constants();
+  update_constants(); // this will also write to eeprom
 }
 
 #ifdef LOG_PERMANENT
-void readPLog() {
+void readPLog(void) {
   eeprom_read_block((void*)&plog, (void*)(E2END - 4 - sizeof(plog)), sizeof(plog));
   if(calculate_sum((uint8_t*)&plog, sizeof(plog)) != plog.checksum) {
     blinkLED(9,100,3);
@@ -194,7 +211,7 @@ void readPLog() {
     writePLog();
   }
 }
-void writePLog() {
+void writePLog(void) {
   plog.checksum = calculate_sum((uint8_t*)&plog, sizeof(plog));
   eeprom_write_block((const void*)&plog, (void*)(E2END - 4 - sizeof(plog)), sizeof(plog));
 }

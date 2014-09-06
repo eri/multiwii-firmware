@@ -1,3 +1,6 @@
+#ifndef DEF_H_
+#define DEF_H_
+
 /**************************************************************************************/
 /***************             test configurations                   ********************/
 /**************************************************************************************/
@@ -76,6 +79,36 @@
   #define DISPLAY_FONT_DSIZE
   #define OLED_DIGOLE
   #define LCD_CONF
+#elif COPTERTEST == 7
+  #define HELI_120_CCPM
+  #define NANOWII
+  #define FORCE_ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = X; imu.accADC[PITCH]  =  Y; imu.accADC[YAW]  =  Z;}
+  #define FORCE_GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = -Y; imu.gyroADC[PITCH] = X; imu.gyroADC[YAW] = -Z;}
+  #define A32U4_4_HW_PWM_SERVOS
+  #define SERVO_RFR_RATE  200    // 200 for graupner is ok
+  #define SERVO_PIN5_RFR_RATE  165    // In Hz, you can set it from 20 to 400Hz, used only in HW PWM mode for mega and 32u4
+  #define SPEKTRUM 1024
+  #define BUZZER
+  #define RCOPTIONSBEEP // ca. 80byte
+  #define VBAT
+  #define LOG_VALUES 1
+  #define DISPLAY_FONT_DSIZE
+  #define OLED_DIGOLE
+  #define LCD_CONF
+  #define LCD_TELEMETRY
+  #define LCD_TELEMETRY_AUTO "1"
+  #define LCD_TELEMETRY_STEP "F14$5R"
+  #define LOG_PERMANENT
+  #define LOG_PERMANENT_SHOW_AFTER_CONFIG
+  #define SUPPRESS_OTHER_SERIAL_COMMANDS
+  #define SUPPRESS_DEFAULTS_FROM_GUI
+  #define NO_FLASH_CHECK
+  #define DEBUG_FREE
+#elif COPTERTEST == 8
+  #define BI
+  #define ITG3200
+  #define PID_CONTROLLER 2
+  #define ESC_CALIB_CANNOT_FLY
 #elif defined(COPTERTEST)
   #error "*** this test is not yet defined"
 #endif
@@ -269,7 +302,7 @@
     #define STABLEPIN_OFF              ;
   #endif 
   #define PPM_PIN_INTERRUPT          attachInterrupt(0, rxInt, RISING); //PIN 0
-  #define SPEK_SERIAL_PORT           0
+  #define RX_SERIAL_PORT             0
   //RX PIN assignment inside the port //for PORTD
   #define THROTTLEPIN                2
   #define ROLLPIN                    4
@@ -396,8 +429,8 @@
   #define STABLEPIN_ON               ;
   #define STABLEPIN_OFF              ;
   #define PPM_PIN_INTERRUPT          DDRE &= ~(1 << 6);PORTE |= (1 << 6); EICRB |= (1 << ISC61)|(1 << ISC60); EIMSK |= (1 << INT6);
-  #if !defined(SPEK_SERIAL_PORT)
-    #define SPEK_SERIAL_PORT         1
+  #if !defined(RX_SERIAL_PORT)
+    #define RX_SERIAL_PORT           1
   #endif
   #define USB_CDC_TX                 3
   #define USB_CDC_RX                 2
@@ -536,8 +569,8 @@
   #else
     #define PPM_PIN_INTERRUPT        attachInterrupt(4, rxInt, RISING);  //PIN 19, also used for Spektrum satellite option
   #endif
-  #if !defined(SPEK_SERIAL_PORT)
-    #define SPEK_SERIAL_PORT         1
+  #if !defined(RX_SERIAL_PORT)
+    #define RX_SERIAL_PORT           1
   #endif
   //RX PIN assignment inside the port //for PORTK
   #define THROTTLEPIN                0  //PIN 62 =  PIN A8
@@ -567,9 +600,10 @@
   #define SERVO_3_PINMODE            pinMode(33,OUTPUT); pinMode(46,OUTPUT); // CAM TRIG  - alt TILT_PITCH
   #define SERVO_3_PIN_HIGH           PORTC |= 1<<4;PORTL |= 1<<3;
   #define SERVO_3_PIN_LOW            PORTC &= ~(1<<4);PORTL &= ~(1<<3);
-  #define SERVO_4_PINMODE            pinMode (37, OUTPUT);                   // new       - alt TILT_ROLL
-  #define SERVO_4_PIN_HIGH           PORTC |= 1<<0;
-  #define SERVO_4_PIN_LOW            PORTC &= ~(1<<0);
+  #define SERVO_4_PINMODE            pinMode (37, OUTPUT);pinMode(7,OUTPUT); // new       - alt TILT_ROLL
+  #define SERVO_4_PIN_HIGH           PORTC |= 1<<0; PORTH |= 1<<4;
+  #define SERVO_4_PIN_LOW            PORTC &= ~(1<<0);PORTH &= ~(1<<4);
+
   #define SERVO_5_PINMODE            pinMode(6,OUTPUT);                      // BI LEFT
   #define SERVO_5_PIN_HIGH           PORTH |= 1<<3;
   #define SERVO_5_PIN_LOW            PORTH &= ~(1<<3);
@@ -596,7 +630,7 @@
   #define LEDPIN_OFF                 PORTD &= ~(1<<4);  
   #define LEDPIN_ON                  PORTD |= (1<<4);     
   #define SPEK_BAUD_SET              UCSR0A  = (1<<U2X0); UBRR0H = ((F_CPU  / 4 / 115200 -1) / 2) >> 8; UBRR0L = ((F_CPU  / 4 / 115200 -1) / 2);
-  #define SPEK_SERIAL_PORT           0
+  #define RX_SERIAL_PORT             0
 
   /* Unavailable pins on MONGOOSE1_0 */
   #define BUZZERPIN_PINMODE          ; // D8
@@ -1047,6 +1081,17 @@
   #define HWPWM6
 #endif
 
+#if defined(SIRIUS_MEGAv5_OSD)
+  #define ITG3200 // in fact a ITG3050
+  #define BMA280
+  #define MS561101BA
+  #define HMC5883
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  =  -Y; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = -X; imu.gyroADC[PITCH] =  -Y; imu.gyroADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  Y; imu.magADC[PITCH]  =  -X; imu.magADC[YAW]  = -Z;}
+  #undef INTERNAL_I2C_PULLUPS
+#endif
+
 #if defined(MINIWII)
   #define ITG3200
   #define BMA180
@@ -1059,9 +1104,9 @@
   #define ADXL345
   #define BMP085
   #define HMC5883
-  #define ACC_ORIENTATION(X, Y, Z) {imu.accADC[ROLL] = -X; imu.accADC[PITCH] = -Y; imu.accADC[YAW] = Z;}
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL] = -X; imu.accADC[PITCH] = -Y; imu.accADC[YAW] = Z;}
   #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
-  #define MAG_ORIENTATION(X, Y, Z) {imu.magADC[ROLL] = X; imu.magADC[PITCH] = Y; imu.magADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL] = X; imu.magADC[PITCH] = Y; imu.magADC[YAW] = -Z;}
   #undef INTERNAL_I2C_PULLUPS
 #endif
 
@@ -1150,6 +1195,15 @@
   #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
 #endif
 
+#if defined(CRIUS_SE_v2_0)
+  #define MPU6050
+  #define HMC5883
+  #define BMP085
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] =  Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
+#endif
+
 #if defined(BOARD_PROTO_1)
   #define MPU6050
   #define HMC5883
@@ -1211,6 +1265,17 @@
   #undef INTERNAL_I2C_PULLUPS
 #endif
 
+#if defined(GY_88)
+  #define MPU6050
+  #define HMC5883
+  #define BMP085
+  #define ACC_ORIENTATION(X, Y, Z) {imu.accADC[ROLL] = -X; imu.accADC[PITCH] = -Y; imu.accADC[YAW] = Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z) {imu.magADC[ROLL] = X; imu.magADC[PITCH] = Y; imu.magADC[YAW] = -Z;}
+  #define MPU6050_I2C_AUX_MASTER // MAG connected to the AUX I2C bus of MPU6050
+  #undef INTERNAL_I2C_PULLUPS
+#endif
+
 #if defined(GY_521)
   #define MPU6050
   #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
@@ -1255,9 +1320,9 @@
   #define BMA180
   #define HMC5883
   #define BMP085
-  #define ACC_ORIENTATION(X, Y, Z) {imu.accADC[ROLL] = -X; imu.accADC[PITCH] = -Y; imu.accADC[YAW] = Z;}
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL] = -X; imu.accADC[PITCH] = -Y; imu.accADC[YAW] = Z;}
   #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] = Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
-  #define MAG_ORIENTATION(X, Y, Z) {imu.magADC[ROLL] = -Y; imu.magADC[PITCH] = X; imu.magADC[YAW] = -Z;} 
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL] = -Y; imu.magADC[PITCH] = X; imu.magADC[YAW] = -Z;} 
 #endif
 
 #if defined(Bobs_6DOF_V1)
@@ -1342,13 +1407,14 @@
   #undef INTERNAL_I2C_PULLUPS
   #define MINTHROTTLE 1050
   #define MAXTHROTTLE 2000
-  #define EXT_MOTOR_RANGE
+  #define EXT_MOTOR_32KHZ
   #define VBAT
   #define VBATSCALE       54
   #define VBATLEVEL_WARN1 10
   #define VBATLEVEL_WARN2 10
   #define VBATLEVEL_CRIT  10
   #define NO_VBAT         10
+  #define MOTOR_STOP
 #endif
 
 #if defined(MEGAWAP_V2_STD) 
@@ -1422,9 +1488,9 @@
   #define HMC5883
   #define MPU6050_I2C_AUX_MASTER // MAG connected to the AUX I2C bus of MPU6050
   #define MS561101BA
-  #define ACC_ORIENTATION(X, Y, Z)  {accADC[ROLL]  = -X; accADC[PITCH]  = -Y; accADC[YAW]  =  Z;}
-  #define GYRO_ORIENTATION(X, Y, Z) {gyroADC[ROLL] =  Y; gyroADC[PITCH] = -X; gyroADC[YAW] = -Z;}
-  #define MAG_ORIENTATION(X, Y, Z)  {magADC[ROLL]  =  X; magADC[PITCH]  =  Y; magADC[YAW]  = -Z;}
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] =  Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
   #undef INTERNAL_I2C_PULLUPS
 #endif
 
@@ -1432,9 +1498,26 @@
   #define MPU6050
   #define HMC5883
   #define MPU6050_I2C_AUX_MASTER // MAG connected to the AUX I2C bus of MPU6050
-  #define ACC_ORIENTATION(X, Y, Z)  {accADC[ROLL]  = -X; accADC[PITCH]  = -Y; accADC[YAW]  =  Z;}
-  #define GYRO_ORIENTATION(X, Y, Z) {gyroADC[ROLL] =  Y; gyroADC[PITCH] = -X; gyroADC[YAW] = -Z;}
-  #define MAG_ORIENTATION(X, Y, Z)  {magADC[ROLL]  =  X; magADC[PITCH]  =  Y; magADC[YAW]  = -Z;}
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] =  Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
+  #undef INTERNAL_I2C_PULLUPS
+#endif
+
+#if defined(Flyduino9DOF)
+  #define MPU6050
+  #define HMC5883
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] =  Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
+  #define MAG_ORIENTATION(X, Y, Z)  {imu.magADC[ROLL]  =  X; imu.magADC[PITCH]  =  Y; imu.magADC[YAW]  = -Z;}
+  #define MPU6050_EN_I2C_BYPASS // MAG connected to the AUX I2C bus of MPU6050
+  #undef INTERNAL_I2C_PULLUPS
+#endif
+
+#if defined(Nano_Plane)
+  #define LSM330
+  #define ACC_ORIENTATION(X, Y, Z)  {imu.accADC[ROLL]  = -X; imu.accADC[PITCH]  = -Y; imu.accADC[YAW]  =  Z;}
+  #define GYRO_ORIENTATION(X, Y, Z) {imu.gyroADC[ROLL] =  Y; imu.gyroADC[PITCH] = -X; imu.gyroADC[YAW] = -Z;}
   #undef INTERNAL_I2C_PULLUPS
 #endif
 
@@ -1485,13 +1568,7 @@
   #define RF22B_Rx_packet_received_interrupt   0x02 
   #define RF22B_PACKET_SENT_INTERRUPT  04 
   #define RF22B_PWRSTATE_POWERDOWN  00    
-  
-  unsigned char ItStatus1, ItStatus2;  
-  typedef struct   
-  { 
-   unsigned char reach_1s    : 1; 
-  } FlagType; 
-  FlagType               Flag;   
+
 #endif
 
 #if defined(DESQUARED6DOFV2GO)
@@ -1527,7 +1604,7 @@
 /***************              Sensor Type definitions              ********************/
 /**************************************************************************************/
 
-#if defined(ADXL345) || defined(BMA020) || defined(BMA180) || defined(NUNCHACK) || defined(MMA7455) || defined(ADCACC) || defined(LIS3LV02) || defined(LSM303DLx_ACC) || defined(MPU6050) || defined(MMA8451Q) || defined(NUNCHUCK)
+#if defined(ADXL345) || defined(BMA020) || defined(BMA180) || defined(BMA280) || defined(MMA7455) || defined(ADCACC) || defined(LIS3LV02) || defined(LSM303DLx_ACC) || defined(MPU6050) || defined(LSM330) || defined(MMA8451Q)
   #define ACC 1
 #else
   #define ACC 0
@@ -1539,7 +1616,7 @@
   #define MAG 0
 #endif
 
-#if defined(ITG3200) || defined(L3G4200D) || defined(MPU6050) || defined(MPU3050) || defined(WMP)
+#if defined(ITG3200) || defined(L3G4200D) || defined(MPU6050) || defined(LSM330) || defined(MPU3050) || defined(WMP)
   #define GYRO 1
 #else
   #define GYRO 0
@@ -1556,77 +1633,18 @@
   #define GPS_PROMINI
 #endif
 
-#if defined(GPS_SERIAL)  || defined(I2C_GPS) || defined(GPS_FROM_OSD) || defined(TINY_GPS)
+#if defined(GPS_SERIAL)  || defined(I2C_GPS) || defined(GPS_FROM_OSD)
   #define GPS 1
 #else
   #define GPS 0
 #endif
 
-#if defined(SRF02) || defined(SRF08) || defined(SRF10) || defined(SRC235) || defined(TINY_GPS_SONAR) || defined(I2C_GPS_SONAR)
+#if defined(SRF02) || defined(SRF08) || defined(SRF10) || defined(SRC235) || defined(I2C_GPS_SONAR)
   #define SONAR 1
 #else
   #define SONAR 0
 #endif
 
-
-#if defined(MMA7455)
-  #define ACC_1G 64
-#endif
-#if defined(MMA8451Q)
-  #define ACC_1G 512
-#endif
-#if defined(ADXL345)
-  #define ACC_1G 265
-#endif
-#if defined(BMA180)
-  #define ACC_1G 255
-#endif
-#if defined(BMA020)
-  #define ACC_1G 63
-#endif
-#if defined(NUNCHACK)
-  #define ACC_1G 200
-#endif
-#if defined(LIS3LV02)
-  #define ACC_1G 256
-#endif
-#if defined(LSM303DLx_ACC)
-  #define ACC_1G 256
-#endif
-#if defined(ADCACC)
-  #define ACC_1G 75
-#endif
-#if defined(MPU6050)
-  #if defined(FREEIMUv04)
-    #define ACC_1G 255
-  #else
-    #define ACC_1G 512
-  #endif
-#endif
-#if defined(NUNCHUCK)
-  #define ACC_1G 200
-#endif
-#if !defined(ACC_1G)
-  #define ACC_1G 256
-#endif
-#define ACC_25deg    (uint16_t)(ACC_1G * 0.423)
-#define ACC_VelScale (9.80665f / 10000.0f / ACC_1G)
-
-#if defined(ITG3200)
-  #define GYRO_SCALE (4 / 14.375 * PI / 180.0 / 1000000.0) //ITG3200   14.375 LSB/(deg/s) and we ignore the last 2 bits
-#endif
-#if defined(L3G4200D)
-  #define GYRO_SCALE ((4.0f * PI * 70.0f)/(1000.0f * 180.0f * 1000000.0f))
-#endif
-#if defined(MPU6050)
-  #define GYRO_SCALE (4 / 16.4 * PI / 180.0 / 1000000.0)   //MPU6050 and MPU3050   16.4 LSB/(deg/s) and we ignore the last 2 bits
-#endif
-#if defined(MPU3050)
-  #define GYRO_SCALE (4 / 16.4 * PI / 180.0 / 1000000.0)   //MPU6050 and MPU3050   16.4 LSB/(deg/s) and we ignore the last 2 bits
-#endif
-#if defined(WMP)
-  #define GYRO_SCALE (1.0f/200e6f)
-#endif
 
 /**************************************************************************************/
 /***************      Multitype decleration for the GUI's          ********************/
@@ -1688,6 +1706,9 @@
     #define SERVO_4_PIN_HIGH           ;
     #define SERVO_4_PIN_LOW            ;
   #else
+    #undef POWERPIN_PINMODE
+    #undef POWERPIN_ON
+    #undef POWERPIN_OFF
     #define POWERPIN_PINMODE           ;
     #define POWERPIN_ON                ;
     #define POWERPIN_OFF               ;
@@ -1900,6 +1921,9 @@
   #if !(defined(MULTILINE_POST))
     #define MULTILINE_POST 3
   #endif
+  #if !(defined(DISPLAY_COLUMNS))
+    #define DISPLAY_COLUMNS 21
+  #endif
 #elif (defined(OLED_I2C_128x64))
   #if !(defined(MULTILINE_PRE))
     #define MULTILINE_PRE 3
@@ -1933,9 +1957,6 @@
   #define DISPLAY_COLUMNS 16
 #endif
 
-#if !defined(ALT_HOLD_THROTTLE_NEUTRAL_ZONE)
-  #define ALT_HOLD_THROTTLE_NEUTRAL_ZONE 40
-#endif 
 
 /**************************************************************************************/
 /***************               override defaults                   ********************/
@@ -1943,18 +1964,27 @@
 
   /***************               pin assignments ?  ********************/
   #ifdef OVERRIDE_V_BATPIN
+    #undef V_BATPIN
     #define V_BATPIN OVERRIDE_V_BATPIN
   #endif
   #ifdef OVERRIDE_PSENSORPIN
+    #undef PSENSORPIN
     #define PSENSORPIN OVERRIDE_PSENSORPIN
   #endif
   #ifdef OVERRIDE_LEDPIN_PINMODE
+    #undef LEDPIN_PINMODE
+    #undef LEDPIN_TOGGLE
+    #undef LEDPIN_OFF
+    #undef LEDPIN_ON
     #define LEDPIN_PINMODE OVERRIDE_LEDPIN_PINMODE
     #define LEDPIN_TOGGLE  OVERRIDE_LEDPIN_TOGGLE
     #define LEDPIN_OFF     OVERRIDE_LEDPIN_OFF
     #define LEDPIN_ON      OVERRIDE_LEDPIN_ON
   #endif
   #ifdef OVERRIDE_BUZZERPIN_PINMODE
+    #undef BUZZERPIN_PINMODE
+    #undef BUZZERPIN_ON
+    #undef BUZZERPIN_OFF
     #define BUZZERPIN_PINMODE OVERRIDE_BUZZERPIN_PINMODE
     #define BUZZERPIN_ON      OVERRIDE_BUZZERPIN_ON
     #define BUZZERPIN_OFF     OVERRIDE_BUZZERPIN_OFF
@@ -1962,17 +1992,21 @@
 
   /*********  sensors orientation - possibly overriding board defaults  *****/
   #ifdef FORCE_GYRO_ORIENTATION
+    #undef GYRO_ORIENTATION
     #define GYRO_ORIENTATION FORCE_GYRO_ORIENTATION
   #endif
   #ifdef FORCE_ACC_ORIENTATION
+    #undef ACC_ORIENTATION
     #define ACC_ORIENTATION FORCE_ACC_ORIENTATION
   #endif
   #ifdef FORCE_MAG_ORIENTATION
+    #undef MAG_ORIENTATION
     #define MAG_ORIENTATION FORCE_MAG_ORIENTATION
   #endif
 
   /*********  servo rates                                               *****/
   #ifdef FORCE_SERVO_RATES
+    #undef SERVO_RATES
     #define SERVO_RATES FORCE_SERVO_RATES
   #endif
 /**************************************************************************************/
@@ -1995,6 +2029,10 @@
         #error "to use powermeter, you must also define and configure VBAT"
 #endif
 
+#if defined(WATTS) && !(defined(POWERMETER_HARD)) && !(defined(VBAT))
+        #error "to compute WATTS, you must also define and configure both POWERMETER_HARD and VBAT"
+#endif
+
 #if defined(LCD_TELEMETRY_AUTO) && !(defined(LCD_TELEMETRY))
         #error "to use automatic telemetry, you MUST also define and configure LCD_TELEMETRY"
 #endif
@@ -2006,3 +2044,5 @@
 #if defined(A32U4_4_HW_PWM_SERVOS) && !(defined(HELI_120_CCPM))
   #error "for your protection: A32U4_4_HW_PWM_SERVOS was not tested with your coptertype"
 #endif
+
+#endif /* DEF_H_ */
