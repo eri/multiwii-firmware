@@ -27,7 +27,9 @@ void computeIMU () {
   annexCode();
   uint8_t t=0;
   while((int16_t)(micros()-timeInterleave)<650) t=1; //empirical, interleaving delay between 2 consecutive reads
-  if (!t) annex650_overrun_count++;
+  #ifdef LCD_TELEMETRY
+    if (!t) annex650_overrun_count++;
+  #endif
   #if GYRO
     Gyro_getADC();
   #endif
@@ -192,7 +194,7 @@ void getEstimatedAttitude(){
   int32_t accMag = 0;
   float scale;
   int16_t deltaGyroAngle16[3];
-  static t_int32_t_vector EstG;
+  static t_int32_t_vector EstG = {0,0,(int32_t)ACC_1G<<16};
   #if MAG
     static t_int32_t_vector EstM;
   #else
